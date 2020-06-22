@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>GitHub Stars for a Projects</title>
+    <style>
+      body {
+        font-family: "Dank Mono", monospace;
+      }
+
+      #overlay {
+        background: #181818;
+        width: 1000px;
+        height: 42px;
+        line-height: 42px;
+        padding: 1em;
+        border-radius: .5em;
+        position: relative;
+        margin: 1em;
+        color: #EBDBB2;
+      }
+
+      #overlay::before {
+        position: absolute;
+        content: "}";
+        font-size: 5.5em;
+        color: #181818;
+        right: -22px;
+        top: 4px;
+      }
+
+      #overlay::after {
+        position: absolute;
+        content: "{";
+        font-size: 5.5em;
+        color: #181818;
+        left: -22px;
+        top: 4px;
+      }
+
+      #total-stars {
+        display: inline-block;
+      }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css"/>
+</head>
+<body>
+<section id="overlay">
+    <span id="primary-emoji">⭐</span>️
+    <span>¡La meta de hoy es llegar a las 1000 stars en github.com/CodelyTV/php-ddd-example! ¡Llevamos</span>
+    <span id="total-stars">0</span>
+    <span>stars! 😳</span>
+</section>
+
+<script>
+    setInterval(update_stars, 10000);
+
+    function update_stars() {
+        fetch('https://api.github.com/repos/codelytv/php-ddd-example')
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (response) {
+                const total_stars = response['stargazers_count'];
+
+                update_stars_element(total_stars);
+            });
+    }
+
+    function update_stars_element(stars) {
+        const selector = document.getElementById('total-stars');
+
+        const old_stars_value = selector.innerText;
+
+        if (old_stars_value < stars) {
+            selector.classList.add('animate__animated', 'animate__tada');
+        }
+
+        selector.innerText = stars;
+    }
+</script>
+</body>
+</html>
