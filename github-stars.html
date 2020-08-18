@@ -6,9 +6,11 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>GitHub Stars for a Projects</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
     <style>
       body {
-        font-family: "Dank Mono", monospace;
+        font-family: 'Poppins', sans-serif;
       }
 
       #overlay {
@@ -21,24 +23,25 @@
         position: relative;
         margin: 1em;
         color: #EBDBB2;
+        font-size: 1.6em;
       }
 
       #overlay::before {
         position: absolute;
         content: "}";
-        font-size: 5.5em;
+        font-size: 3em;
         color: #181818;
-        right: -22px;
-        top: 4px;
+        right: -14px;
+        top: 28px;
       }
 
       #overlay::after {
         position: absolute;
         content: "{";
-        font-size: 5.5em;
+        font-size: 3em;
         color: #181818;
-        left: -22px;
-        top: 4px;
+        left: -14px;
+        top: 28px;
       }
 
       #total-stars {
@@ -49,36 +52,45 @@
 </head>
 <body>
 <section id="overlay">
-    <span id="primary-emoji">⭐</span>️
-    <span>¡La meta de hoy es llegar a las 1000 stars en github.com/CodelyTV/php-ddd-example! ¡Llevamos</span>
-    <span id="total-stars">0</span>
-    <span>stars! 😳</span>
+    <div style="margin-top: -.6em">
+        <span id="primary-emoji">⭐</span>️
+        <span>¡Queremos llegar a</span> <span id="goal">XXX</span> <span>stars en github.com/</span><span id="repo"></span><span>! ¡Llevamos</span>
+        <span id="total-stars">0</span>
+        <span>! 😳</span>
+    </div>
 </section>
 
 <script>
-    setInterval(update_stars, 10000);
+    const urlParams = new URLSearchParams(window.location.search);
+    const goal      = urlParams.get('goal');
+    const repo      = urlParams.get('repo');
 
+    document.getElementById("goal").innerText = goal;
+    document.getElementById("repo").innerText = repo;
+    
+    setInterval(update_stars, 10000);
+    
     function update_stars() {
-        fetch('https://api.github.com/repos/codelytv/php-ddd-example')
+        fetch('https://api.github.com/repos/' + repo)
             .then(function (response) {
                 return response.json();
             })
             .then(function (response) {
                 const total_stars = response['stargazers_count'];
-
+                
                 update_stars_element(total_stars);
             });
     }
-
+    
     function update_stars_element(stars) {
         const selector = document.getElementById('total-stars');
-
+        
         const old_stars_value = selector.innerText;
-
+        
         if (old_stars_value < stars) {
             selector.classList.add('animate__animated', 'animate__tada');
         }
-
+        
         selector.innerText = stars;
     }
 </script>
